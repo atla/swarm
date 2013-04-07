@@ -1,11 +1,17 @@
 package com.droidcon.swarm;
 
+import com.droidcon.swarm.api.Game;
+import com.droidcon.swarm.mock.SwarmMockGame;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 
 public class Swarm extends Activity {
 
+	
+	public static final Game GAME = new SwarmMockGame();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
