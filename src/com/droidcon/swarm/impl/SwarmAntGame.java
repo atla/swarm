@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.droidcon.swarm.api.Game;
 import com.droidcon.swarm.api.GameEventListener;
@@ -18,14 +19,16 @@ import com.dsi.ant.channel.AntChannel;
 import com.dsi.ant.channel.AntChannelProvider;
 import com.dsi.ant.channel.Capabilities;
 import com.dsi.ant.channel.ChannelNotAvailableException;
+import com.dsi.ant.channel.IAntChannelMessageHandler;
 import com.dsi.ant.channel.PredefinedNetwork;
 import com.dsi.ant.message.ChannelId;
 import com.dsi.ant.message.ChannelType;
 import com.dsi.ant.message.ExtendedAssignment;
 import com.dsi.ant.message.LibConfig;
 import com.dsi.ant.message.LowPrioritySearchTimeout;
+import com.dsi.ant.message.fromant.AntMessageFromAnt;
 
-public class SwarmAntGame implements Game {
+public class SwarmAntGame implements Game, IAntChannelMessageHandler {
 	
 	private AntService antService;
 	private AntChannelProvider channelProvider;
@@ -38,7 +41,7 @@ public class SwarmAntGame implements Game {
 	
 	public SwarmAntGame(Context ctx, String playerName) {
 		this.context = ctx;
-		this.channelId = rnd.nextInt();
+		this.channelId = playerName.charAt(0) + 127;
 		me = new Player();
 		me.name = playerName;
 		me.units = 100;
@@ -69,8 +72,13 @@ public class SwarmAntGame implements Game {
                 beaconChannel.assign(ChannelType.BIDIRECTIONAL_MASTER, new ExtendedAssignment(true, false));
                 beaconChannel.setAdapterWideLibConfig(new LibConfig(true, true, false));
                 beaconChannel.setChannelId(new ChannelId(channelId, false, 42, 1));
+                beaconChannel.open();
                 listenChannel = channelProvider.acquireChannel(context, PredefinedNetwork.PUBLIC, new Capabilities(false, true, true, false));
-                listenChannel.assign(ChannelType.SHARED_BIDIRECTIONAL_SLAVE);
+                listenChannel.assign(ChannelType.BIDIRECTIONAL_SLAVE);
+                listenChannel.setChannelId(new ChannelId(0, false, 42, 1));
+                listenChannel.setMessageHandler(SwarmAntGame.this);
+                listenChannel.setAdapterWideLibConfig(new LibConfig(true, true, false));
+                listenChannel.open();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -119,6 +127,21 @@ public class SwarmAntGame implements Game {
 	public void shutdown() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void handleMessage(AntMessageFromAnt arg0) {
+		Log.i("SwarmAntGame", arg0.getMessageIdString() + ": " + arg0.getMessageContentString());
+	}
+
+	@Override
+	public void onChannelDeath() {
+		try {
+			listenChannel.close();
+			listenChannel.open();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
