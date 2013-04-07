@@ -74,6 +74,14 @@ public class Swarm extends Activity {
 		if (gameView != null){
 			this.gameEventListener = new GameViewEventListener(GAME, gameView);	
 		}
+		
+		GAME.resume();
+	}
+	
+	 @Override
+	protected void onPause() {
+		super.onPause();
+		GAME.shutdown();
 	}
 
 	@Override
