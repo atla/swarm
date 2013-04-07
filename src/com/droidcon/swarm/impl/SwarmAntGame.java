@@ -33,4 +33,16 @@ public class SwarmAntGame implements Game {
 		return null;
 	}
 
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void shutdown() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

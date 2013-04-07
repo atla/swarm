@@ -37,6 +37,9 @@ public class GameViewEventListener implements GameEventListener {
 	private void onPlayerAddedEvent(PlayerAddedEvent event) {
 		Log.d(TAG, "player added event received: " + event.player.name);
 
+		
+		
+		
 		gameView.update(game);
 
 	}

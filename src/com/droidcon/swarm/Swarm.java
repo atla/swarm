@@ -1,6 +1,10 @@
 package com.droidcon.swarm;
 
+import java.util.List;
+
 import com.droidcon.swarm.api.Game;
+import com.droidcon.swarm.api.GameEventListener;
+import com.droidcon.swarm.api.Player;
 import com.droidcon.swarm.mock.SwarmMockGame;
 
 import android.os.Bundle;
@@ -9,7 +13,43 @@ import android.view.Menu;
 
 public class Swarm extends Activity {
 
-	public static final Game GAME = new SwarmMockGame();
+	public static Game GAME = new Game (){
+
+		@Override
+		public void registerListener(GameEventListener listener) {
+		}
+
+		@Override
+		public void unregisterListener(GameEventListener listener) {
+		}
+
+		@Override
+		public void sendUnits(Player target, int units) {
+		}
+
+		@Override
+		public List<Player> getPlayers() {
+			return null;
+		}
+
+		@Override
+		public Player getPlayer() {
+			return null;
+		}
+
+		@Override
+		public void resume() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void shutdown() {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	};
 
 	private GameView gameView;
 
@@ -22,7 +62,7 @@ public class Swarm extends Activity {
 
 		this.gameView = (GameView) this.findViewById(R.id.game_view);
 
-		
+		GAME = new SwarmMockGame();
 		
 
 	}
