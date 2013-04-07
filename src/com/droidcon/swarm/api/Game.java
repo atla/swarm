@@ -9,9 +9,13 @@ public interface Game {
 	public void unregisterListener(GameEventListener listener);
 
 	public void sendUnits(Player target, int units);
-	
+
 	public List<Player> getPlayers();
-	
+
 	public Player getPlayer();
+
+	public void resume();
+
+	public void shutdown();
 
 }
