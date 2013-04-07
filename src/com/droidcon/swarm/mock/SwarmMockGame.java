@@ -6,6 +6,9 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.app.Activity;
+import android.content.Context;
+
 import com.droidcon.swarm.api.Game;
 import com.droidcon.swarm.api.GameEventListener;
 import com.droidcon.swarm.api.Player;
@@ -36,7 +39,10 @@ public class SwarmMockGame implements Game {
 			} else if (eventType < 150) {
 				createRemovedEvent();
 			} else if (eventType > 800) {
-				createAddedEvent();
+				if (mock.getPlayers().size() < 6) {
+					createAddedEvent();
+				}
+
 			}
 
 			for (Player p : mock.getPlayers()) {
@@ -98,11 +104,12 @@ public class SwarmMockGame implements Game {
 	private GameEventListener listener;
 	private Player player;
 	private Timer timer;
+	private Activity ctx;
 
-	public SwarmMockGame() {
+	public SwarmMockGame(Activity ctx) {
 
 		player = createPlayer("atla", Team.GREEN, 100);
-
+		this.ctx = ctx;
 	}
 
 	public void addPlayer(Player p) {
@@ -117,7 +124,9 @@ public class SwarmMockGame implements Game {
 
 	private Player createPlayer(String string, Team green, int i) {
 		Player p = new Player();
-
+		p.name = string;
+		p.team = green;
+		p.distance = i;
 		return p;
 	}
 
@@ -133,9 +142,19 @@ public class SwarmMockGame implements Game {
 		this.listener = listener;
 	}
 
-	public void sendEvent(Object event) {
-		if (this.listener != null)
-			this.listener.onEvent(event);
+	public void sendEvent(final Object event) {
+		if (this.listener != null) {
+			ctx.runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					listener.onEvent(event);
+				}
+
+			});
+
+		}
+
 	}
 
 	@Override

@@ -55,6 +55,8 @@ public class GameView extends View {
 		this.players = newPlayers;
 		this.shots = newShots;
 
+		this.invalidate();
+
 	}
 
 	private ShotObject newShot(int distance) {
@@ -73,7 +75,7 @@ public class GameView extends View {
 		PlayerObject po = new PlayerObject();
 		po.x = player.distance;
 		po.y = player.distance;
-
+		po.name = player.name;
 		return po;
 	}
 
@@ -89,8 +91,7 @@ public class GameView extends View {
 		playerPaint.setStrokeWidth(5);
 		playerPaint.setStyle(Paint.Style.STROKE);
 		playerPaint.setAntiAlias(true);
-		
-		
+
 		shotPaint = new Paint();
 		shotPaint.setColor(Color.parseColor("#99cc00"));
 		shotPaint.setStrokeWidth(2);
@@ -114,8 +115,8 @@ public class GameView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		
-		canvas.translate(this.getWidth()/2, this.getHeight()/2);
+
+		canvas.translate(this.getWidth() / 2, this.getHeight() / 2);
 
 		for (PlayerObject po : players) {
 			renderPlayer(po, canvas);
@@ -130,13 +131,13 @@ public class GameView extends View {
 	private void renderShot(ShotObject so, Canvas c) {
 
 		Path path = new Path();
-		
+
 		path.moveTo(so.x - 10, so.y - 10);
 		path.lineTo(so.x, so.y + 30);
-		
+
 		path.moveTo(so.x, so.y + 30);
 		path.lineTo(so.x + 10, so.y - 10);
-		
+
 		path.moveTo(so.x - 10, so.y - 10);
 		path.lineTo(so.x + 10, so.y - 10);
 
@@ -147,5 +148,9 @@ public class GameView extends View {
 
 	private void renderPlayer(PlayerObject po, Canvas c) {
 		c.drawCircle(po.x, po.y, 40, playerPaint);
+
+		int offset = po.name.length() * 5;
+
+		c.drawText(po.name, po.x - (offset / 2), po.y - 30, playerPaint);
 	}
 }

@@ -13,7 +13,7 @@ import android.view.Menu;
 
 public class Swarm extends Activity {
 
-	public static Game GAME = new Game (){
+	public static Game GAME = new Game() {
 
 		@Override
 		public void registerListener(GameEventListener listener) {
@@ -40,15 +40,15 @@ public class Swarm extends Activity {
 		@Override
 		public void resume() {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void shutdown() {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	};
 
 	private GameView gameView;
@@ -62,23 +62,22 @@ public class Swarm extends Activity {
 
 		this.gameView = (GameView) this.findViewById(R.id.game_view);
 
-		GAME = new SwarmMockGame();
-		
+		GAME = new SwarmMockGame(this);
 
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		if (gameView != null){
-			this.gameEventListener = new GameViewEventListener(GAME, gameView);	
+
+		if (gameView != null) {
+			this.gameEventListener = new GameViewEventListener(GAME, gameView);
 		}
-		
+
 		GAME.resume();
 	}
-	
-	 @Override
+
+	@Override
 	protected void onPause() {
 		super.onPause();
 		GAME.shutdown();
